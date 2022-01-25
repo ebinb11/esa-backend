@@ -1,6 +1,7 @@
 package com.employee.employeebackend.service.serviceImpl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,25 +32,39 @@ import com.google.gson.Gson;
 import java.util.stream.Collectors;
 
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService  {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Autowired
 	UserRepository userRepository;
-	
+
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	
+	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = findUserByEmailAddress(username);
-        Set<String> role = new HashSet<>();
+		Set<String> role = new HashSet<>();
+        if (user == null) {
+            throw new UsernameNotFoundException("Invalid username or password.");
+        }
         role.add("user");
-		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), role.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+        return new org.springframework.security.core.userdetails.User(user
+                .getEmail(), user.getPassword(),
+                role.stream()
+                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
 	}
-	
+
 	@Override
 	public User findUserByEmailAddress(String userName) throws UsernameNotFoundException {
-		return userRepository.findByEmailIdAndDeletedfalses(userName);
+		if (userName != null && !userName.isEmpty()) {
+			User user =  userRepository.findByEmailIdAndDeletedfalses(userName);
+			return user;
+		} else {
+			throw new BadDataException("Email or phone number mismatch.");
+		}
 	}
 
 	@Override
@@ -71,7 +87,7 @@ public class UserServiceImpl implements UserService, UserDetailsService  {
 			if (user != null && user.getContent().size() > 0) {
 				user.getContent().forEach(userObj -> {
 					Gson gson = new Gson();
-					UserResponseDTO userResponseDTO =   gson.fromJson(gson.toJson(userObj), UserResponseDTO.class);
+					UserResponseDTO userResponseDTO = gson.fromJson(gson.toJson(userObj), UserResponseDTO.class);
 					userResponseDTOList.add(userResponseDTO);
 				});
 			}
@@ -105,10 +121,12 @@ public class UserServiceImpl implements UserService, UserDetailsService  {
 			}
 			Gson gson = new Gson();
 			User userSet = gson.fromJson(gson.toJson(request), User.class);
+			userSet.setCreatedBy("Admin Ebin");
+			userSet.setCreatedOn(new Date());
 			userSet.setPassword(passwordEncoder.encode(request.getPassword()));
 			User userSaveInDB = userRepository.save(userSet);
 			if (userSaveInDB == null) {
-				 throw new BadDataException("Something went wrong when tried to enter data");
+				throw new BadDataException("Something went wrong when tried to enter data");
 			}
 			UserResponseDTO response = gson.fromJson(gson.toJson(userSaveInDB), UserResponseDTO.class);
 			return response;

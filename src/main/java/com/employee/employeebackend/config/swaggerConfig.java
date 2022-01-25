@@ -47,13 +47,6 @@ public class swaggerConfig {
 				SecurityReference.builder().reference("Authorization").scopes(new AuthorizationScope[0]).build()))
 				.build();
 	}
-
-	private List<SecurityReference> defaultAuth() {
-		AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-		AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-		authorizationScopes[0] = authorizationScope;
-		return Arrays.asList(new SecurityReference("Authorization", authorizationScopes));
-	}
 	
 	private ApiInfo apiInfo() {
 	    return new ApiInfo(

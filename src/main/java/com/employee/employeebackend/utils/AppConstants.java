@@ -8,6 +8,6 @@ public interface AppConstants {
     String TOKEN_PREFIX = "Bearer ";
     String HEADER_STRING = "Authorization";
 	String INFO_EMAIL_ID = "ebinproject11@gmail.com";
-	String INFO_EMAIL_PASSWORD = "ebinb1121997";
+	String INFO_EMAIL_PASSWORD = "ebinb11219";
 
 }

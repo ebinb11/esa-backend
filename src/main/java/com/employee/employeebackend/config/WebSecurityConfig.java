@@ -48,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public JwtAuthenticationFilter authenticationTokenFilterBean() {
 		return new JwtAuthenticationFilter();
 	}
-	
+//	
 //	@Override
 //	public void configure(WebSecurity web) throws Exception {
 //	    web.ignoring().antMatchers(IGNORE_URLS);
@@ -82,22 +82,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/configuration/ui",
             "/swagger-resources/**",
             "/swagger-ui/**",
+            "/swagger-ui.html",
             "swagger-ui/index.html",
             "/configuration/**",
             "/webjars/**",
-	};
-	
-	private static final String[] IGNORE_URLS = {
-			"/swagger-ui/index.html",
-			"/",
-			"/authenticate**",
-            "/v2/api-docs",
-            "rest/docs",
-            "/configuration/ui",
-            "/swagger-resources/**",
-            "/swagger-ui/**",
-            "swagger-ui/index.html",
-            "/configuration/**",
-            "/webjars/**",
+            "/rest/docs"
 	};
 }

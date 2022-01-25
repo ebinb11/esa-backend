@@ -2,10 +2,12 @@ package com.employee.employeebackend.service.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.employee.employeebackend.config.JwtTokenUtil;
@@ -28,19 +30,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 
+	@Autowired
+	PasswordEncoder PasswordEncoder;
+
 	@Override
-	public AuthResponseDTO loginCheck(AuthRequestDTO request) throws UsernameNotFoundException {
-		
+	public AuthResponseDTO loginCheck(AuthRequestDTO authRequestDTO) {
 		final Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassword()));
+				.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getUserName(), authRequestDTO.getPassword()));
 		SecurityContextHolder.getContext().setAuthentication(authentication);
-		final User user = userService.findUserByEmailAddress(request.getUserName());
+		AuthResponseDTO response = new AuthResponseDTO();
+		final User user = userService.findUserByEmailAddress(authRequestDTO.getUserName());
 		if (user != null) {
-			final String token = jwtTokenUtil.generateToken(user.getEmail());
-			AuthResponseDTO response = new AuthResponseDTO();
-			response.setToken(token);
-			return response;
+			if (PasswordEncoder.matches(authRequestDTO.getPassword(), user.getPassword())) {
+				final String token = jwtTokenUtil.generateToken(user.getEmail());
+				response.setToken(token);
+				return response;
+			}
 		}
-		return null;
+		throw new BadCredentialsException("Authentication error, please check provided email or password!");
 	}
 }

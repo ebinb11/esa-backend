@@ -1,4 +1,4 @@
-package com.employee.employeebackend.config;
+package com.employee.employeebackend.security;
 
 import java.io.IOException;
 
@@ -7,7 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,10 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.employee.employeebackend.service.serviceImpl.UserServiceImpl;
 import com.employee.employeebackend.utils.AppConstants;
-
-import io.jsonwebtoken.Jwt;
 
 @Component
 @Slf4j

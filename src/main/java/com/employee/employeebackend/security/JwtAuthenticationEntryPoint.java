@@ -1,4 +1,4 @@
-package com.employee.employeebackend.config;
+package com.employee.employeebackend.security;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

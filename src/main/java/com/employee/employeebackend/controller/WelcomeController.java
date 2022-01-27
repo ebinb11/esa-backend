@@ -8,7 +8,7 @@ public class WelcomeController {
 	
 	@RequestMapping("/")
     public String home() {
-        return "redirect:esa";
+        return "redirect:/swagger-ui/";
     }
 
 }

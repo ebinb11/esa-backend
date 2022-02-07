@@ -140,7 +140,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	public UserResponseDTO userGetById(Long id) {
 		Optional<User> userGet = userRepository.findByIdAndDeletedFalsed(id);
 		if (!userGet.isPresent()) {
-			throw new BadDataException("User not found !");
+//			throw new BadDataException("User not found !");
+			return null;
 		}
 		Gson gson = new Gson();
 		UserResponseDTO response = gson.fromJson(gson.toJson(userGet.get()), UserResponseDTO.class);

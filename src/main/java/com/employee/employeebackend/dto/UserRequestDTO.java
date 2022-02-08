@@ -1,7 +1,5 @@
 package com.employee.employeebackend.dto;
 
-import java.sql.Date;
-
 import lombok.Data;
 
 @Data

@@ -9,6 +9,9 @@ import org.springframework.web.client.RestTemplate;
 
 import com.employee.employeebackend.dto.CountriesDTO;
 import com.employee.employeebackend.service.CovidService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
 @Service
 public class CovidServiceImpl implements CovidService {
@@ -30,6 +33,14 @@ public class CovidServiceImpl implements CovidService {
 				countriesDTOList.add(countriesGeta);
 			}
 		}
+		
+		//JSon Filter
+		SimpleFilterProvider simpleFilterProvider = new SimpleFilterProvider();
+		simpleFilterProvider.addFilter("countriesFilter", SimpleBeanPropertyFilter.filterOutAllExcept("country"));
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.setFilterProvider(simpleFilterProvider);
+		
+		
 		return countriesGet;
 	}
 }

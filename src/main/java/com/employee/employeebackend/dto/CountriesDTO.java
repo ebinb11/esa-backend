@@ -1,12 +1,14 @@
 package com.employee.employeebackend.dto;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import lombok.Data;
 
 @Data
-@JsonPropertyOrder 
+@JsonPropertyOrder({"slug"})
+@JsonFilter("countriesFilter")
 public class CountriesDTO {
 	
 	@JsonProperty(value = "Country")

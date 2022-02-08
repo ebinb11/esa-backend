@@ -1,5 +1,6 @@
 package com.employee.employeebackend.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,7 +20,6 @@ import com.employee.employeebackend.dto.UserResponseDTO;
 import com.employee.employeebackend.exception.BadDataException;
 import com.employee.employeebackend.service.UserService;
 import com.employee.employeebackend.utils.AppResponse;
-
 
 @RestController
 @RequestMapping(value = "api/user")

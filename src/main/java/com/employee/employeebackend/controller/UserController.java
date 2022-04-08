@@ -1,6 +1,8 @@
 package com.employee.employeebackend.controller;
 
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -57,7 +59,7 @@ public class UserController {
 	}
 	
 	@PostMapping(value = "userEntry")
-	public AppResponse<UserResponseDTO> userEntry(@RequestBody UserRequestDTO request) {
+	public AppResponse<UserResponseDTO> userEntry(@RequestBody @Valid UserRequestDTO request) {
 		UserResponseDTO response = userService.userEntry(request);
 		if (response != null) {
 			return AppResponse.<UserResponseDTO> builder()

@@ -2,10 +2,8 @@ package com.employee.employeebackend.service.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,28 +37,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = findUserByEmailAddress(username);
-		Set<String> role = new HashSet<>();
-        if (user == null) {
-            throw new UsernameNotFoundException("Invalid username or password.");
-        }
-        role.add("user");
-        return new org.springframework.security.core.userdetails.User(user
-                .getEmail(), user.getPassword(),
-                role.stream()
-                        .map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+
+		if (user == null) {
+			throw new UsernameNotFoundException("Invalid username or password.");
+		}
+		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), user
+				.getRoles().stream().map(e -> new SimpleGrantedAuthority(e.getName())).collect(Collectors.toList()));
 	}
 
 	@Override
 	public User findUserByEmailAddress(String userName) throws UsernameNotFoundException {
 		if (userName != null && !userName.isEmpty()) {
-			User user =  userRepository.findByEmailIdAndDeletedfalses(userName);
+			User user = userRepository.findByEmailIdAndDeletedfalses(userName);
 			return user;
 		} else {
 			throw new BadDataException("Email or phone number mismatch.");

@@ -1,33 +1,17 @@
---
--- Table structure for table `role`
---
 
-DROP TABLE IF EXISTS `role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `role` (
-  `id` BIGINT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  `description` VARCHAR(100) DEFAULT NULL,
+  `id` bigint(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `description` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  UNIQUE KEY `role_UNIQUE` (`name`)
-) ENGINE=INNODB DEFAULT CHARSET=utf8;
+  UNIQUE KEY `id_UNIQUE` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+
 INSERT INTO `role` VALUES (1,'User','The user'),
 (2,'ADMIN','The Administrator'),
 (3,'SUPER_ADMIN','The super admin'),
 (4,'SENIOR_ADMIN','The senior admin');
-/*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `role`
---
--- ORDER BY:  `id`
-
-LOCK TABLES `role` WRITE;
-/*!40000 ALTER TABLE `role` DISABLE KEYS */;
-/*!40000 ALTER TABLE `role` ENABLE KEYS */;
-UNLOCK TABLES;
 
 CREATE TABLE `user`(
 `id`BIGINT(11) NOT NULL AUTO_INCREMENT,
@@ -52,41 +36,23 @@ CREATE TABLE `user`(
  INSERT INTO `user`(`id`,`first_name`,`last_name`,`phone_no`,`email`,`password`,`created_on`,`created_by`)  VALUES ('3','Super Admin','B','8137854703','superadmin@gmail.com','$2a$10$ENC8jbRrOjiQChht68l0p.aBXGiDtm3SXzMTQwj.UdVspWWV3EZQy','2021-01-10 12:01:34','ebin');
  INSERT INTO `user`(`id`,`first_name`,`last_name`,`phone_no`,`email`,`password`,`created_on`,`created_by`)  VALUES ('4','Senior Admin','B','8137854703','senioradmin@gmail.com','$2a$10$ENC8jbRrOjiQChht68l0p.aBXGiDtm3SXzMTQwj.UdVspWWV3EZQy','2021-01-10 12:01:34','ebin');
 
- --
--- Table structure for table `user_role`
---
 
-DROP TABLE IF EXISTS `user_role`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_role` (
-  `id` BIGINT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` BIGINT(20) UNSIGNED NOT NULL,
-  `role_id` BIGINT(20) UNSIGNED NOT NULL,
+  `id` bigint(11) NOT NULL,
+  `user_id` bigint(11) NOT NULL,
+  `role_id` bigint(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_user_role_1_idx` (`user_id`),
   KEY `fk_user_role_2_idx` (`role_id`),
-  CONSTRAINT `fk_user_role_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT `fk_user_role_2` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON UPDATE CASCADE ON DELETE CASCADE
-) ENGINE=INNODB DEFAULT CHARSET=utf8;
+  CONSTRAINT `fk_user_role_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_user_role_2` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 INSERT INTO `user_role` VALUES (1,1,1);
 INSERT INTO `user_role` VALUES (2,2,2);
 INSERT INTO `user_role` VALUES (3,3,3);
 INSERT INTO `user_role` VALUES (4,4,4);
 
 
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user_role`
---
-
-LOCK TABLES `user_role` WRITE;
-/*!40000 ALTER TABLE `user_role` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_role` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-SHOW ENGINE INNODB STATUS
  

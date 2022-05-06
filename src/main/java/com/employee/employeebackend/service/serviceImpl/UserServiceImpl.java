@@ -81,8 +81,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 			if (user != null && user.getContent().size() > 0) {
 				user.getContent().forEach(userObj -> {
-					Gson gson = new Gson();
-					UserResponseDTO userResponseDTO = gson.fromJson(gson.toJson(userObj), UserResponseDTO.class);
+					UserResponseDTO userResponseDTO = response(userObj);
 					userResponseDTOList.add(userResponseDTO);
 				});
 			}
@@ -123,7 +122,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			if (userSaveInDB == null) {
 				throw new BadDataException("Something went wrong when tried to enter data");
 			}
-			UserResponseDTO response = gson.fromJson(gson.toJson(userSaveInDB), UserResponseDTO.class);
+			UserResponseDTO response = response(userSaveInDB);
 			return response;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -138,8 +137,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 //			throw new BadDataException("User not found !");
 			return null;
 		}
-		Gson gson = new Gson();
-		UserResponseDTO response = gson.fromJson(gson.toJson(userGet.get()), UserResponseDTO.class);
+		UserResponseDTO response = response(userGet.get());
 		return response;
 	}
 
@@ -158,5 +156,19 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			response.setMessages("User not deleted successfully , try again later !");
 		}
 		return response;
+	}
+
+	public UserResponseDTO response(User user) {
+		UserResponseDTO responseSet = new UserResponseDTO();
+		responseSet.setId(user.getId());
+		responseSet.setFirstName((user.getFirstName()));
+		responseSet.setLastName(user.getLastName());
+		responseSet.setCreatedBy(user.getCreatedBy());
+		responseSet.setCreatedOn(user.getCreatedOn());
+		responseSet.setUpdatedBy(user.getUpdatedBy());
+		responseSet.setUpdatedOn(user.getUpdatedOn());
+
+		return responseSet;
+
 	}
 }

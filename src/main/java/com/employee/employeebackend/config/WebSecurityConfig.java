@@ -51,12 +51,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //	
 //	@Override
 //	public void configure(WebSecurity web) throws Exception {
-//	    web.ignoring().antMatchers(IGNORE_URLS);
+//	    web.ignoring().antMatchers(IGNORE_URLS);  .antMatchers("/userPage").access("hasRole('ROLE_USER')")
 //	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable()
+		http.cors().and().csrf().disable() 
 		.authorizeRequests()
 				.antMatchers(PUBLIC_URLS)
 				.permitAll().anyRequest().authenticated().and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and().sessionManagement()

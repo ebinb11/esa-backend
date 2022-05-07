@@ -5,6 +5,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,6 +60,7 @@ public class UserController {
 	}
 	
 	@PostMapping(value = "userEntry")
+	@PreAuthorize("hasAnyAuthority('ADMIN')")
 	public AppResponse<UserResponseDTO> userEntry(@RequestBody @Valid UserRequestDTO request) {
 		UserResponseDTO response = userService.userEntry(request);
 		if (response != null) {

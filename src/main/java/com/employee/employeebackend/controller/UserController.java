@@ -23,6 +23,7 @@ import com.employee.employeebackend.dto.UserResponseDTO;
 import com.employee.employeebackend.exception.BadDataException;
 import com.employee.employeebackend.service.UserService;
 import com.employee.employeebackend.utils.AppResponse;
+import com.google.api.client.repackaged.com.google.common.base.Preconditions;
 
 @RestController
 @RequestMapping(value = "api/user")
@@ -79,6 +80,7 @@ public class UserController {
 	
 	@GetMapping(value = "/userGet/{id}")
 	public AppResponse<UserResponseDTO> userGet(@PathVariable Long id) throws BadDataException {
+		Preconditions.checkNotNull(id);
 		UserResponseDTO response = userService.userGetById(id);
 		if (response != null) {
 			return AppResponse.<UserResponseDTO> builder()

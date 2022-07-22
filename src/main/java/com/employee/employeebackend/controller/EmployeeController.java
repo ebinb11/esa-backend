@@ -25,8 +25,6 @@ import com.employee.employeebackend.exception.BadDataException;
 import com.employee.employeebackend.service.EmployeeService;
 import com.employee.employeebackend.utils.AppResponse;
 
-import lombok.Builder;
-
 @RestController
 @RequestMapping(value = "/employee")
 @CrossOrigin(origins = "http://localhost:3000")

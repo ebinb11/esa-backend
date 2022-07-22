@@ -14,7 +14,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -62,4 +61,6 @@ public class User {
                     name = "role_id", referencedColumnName = "id"))
     @EqualsAndHashCode.Exclude
     private Set<Role> roles = new HashSet<>();
+	
+	//textAdjust="StretchHeight"
 }

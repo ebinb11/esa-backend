@@ -4,7 +4,6 @@ import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RestController;
 
 import springfox.documentation.builders.PathSelectors;

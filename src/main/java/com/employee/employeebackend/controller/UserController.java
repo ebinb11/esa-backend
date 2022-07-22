@@ -1,6 +1,8 @@
 package com.employee.employeebackend.controller;
 
 
+import java.io.FileNotFoundException;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +23,12 @@ import com.employee.employeebackend.dto.UserListResponseDTO;
 import com.employee.employeebackend.dto.UserRequestDTO;
 import com.employee.employeebackend.dto.UserResponseDTO;
 import com.employee.employeebackend.exception.BadDataException;
+import com.employee.employeebackend.service.ReportService;
 import com.employee.employeebackend.service.UserService;
 import com.employee.employeebackend.utils.AppResponse;
 import com.google.api.client.repackaged.com.google.common.base.Preconditions;
+
+import net.sf.jasperreports.engine.JRException;
 
 @RestController
 @RequestMapping(value = "api/user")
@@ -32,6 +37,8 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
+	@Autowired
+	ReportService reportService;
 	
 	@GetMapping("/")
 	public String welcome() {
@@ -112,4 +119,23 @@ public class UserController {
 					.build();
 		}
 	}
+	
+	@GetMapping("userReports")
+	public AppResponse<String> userReports(@RequestParam String reportFormat) throws FileNotFoundException, JRException {
+		String response = reportService.exportUserReport(reportFormat);
+		if (response != null && !response.isEmpty()) {
+			return AppResponse.<String> builder()
+					.data(response)
+					.message("Report generated successfully!")
+					.success(true)
+					.build();
+		} else {
+			return AppResponse.<String> builder()
+					.message("Oops something went wrong try again later!")
+					.success(false)
+					.build();
+		}
+	}
+	
+	
 }

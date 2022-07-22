@@ -12,7 +12,6 @@ import org.thymeleaf.context.Context;
 import com.employee.employeebackend.entity.Employee;
 import com.employee.employeebackend.exception.BadDataException;
 import com.employee.employeebackend.service.MailService;
-import com.employee.employeebackend.utils.AppConstants;
 
 @Service
 public class MailServiceImpl implements MailService {

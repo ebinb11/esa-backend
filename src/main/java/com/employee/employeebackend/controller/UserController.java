@@ -7,6 +7,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.employee.employeebackend.dto.StatusResponse;
 import com.employee.employeebackend.dto.UserListResponseDTO;
@@ -153,6 +157,35 @@ public class UserController {
 					.message("Oops something went wrong try again later!")
 					.success(false)
 					.build();
+		}
+	}
+	
+	@PostMapping(value = "/uploadImage")
+	public AppResponse<String> uploadImage(@RequestParam Long id, @RequestParam("image") MultipartFile file) {
+		String response = userService.uploadImage(file, id);
+		if (response != null && !response.isEmpty()) {
+			return AppResponse.<String> builder()
+					.data(response)
+					.message("File Uploaded successfully!")
+					.success(true)
+					.build();
+		} else {
+			return AppResponse.<String> builder()
+					.message("Oops something went wrong try again later!")
+					.success(false)
+					.build();
+		}
+	}
+	
+	@GetMapping(value = "/downloadImage")
+	public ResponseEntity<Object> downloadImage(@RequestParam Long id) {
+		byte[] response = userService.downloadImage(id);
+		if (response != null) {
+			return ResponseEntity.status(HttpStatus.OK)
+					.contentType(MediaType.valueOf("image/png"))
+					.body(response);
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 		}
 	}
 	

@@ -1,3 +1,0 @@
-ALTER TABLE `esaf`.`user_role` 
-CHANGE COLUMN `id` `id` BIGINT(11) NOT NULL AUTO_INCREMENT ;
-

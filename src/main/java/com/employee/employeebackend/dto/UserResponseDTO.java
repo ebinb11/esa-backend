@@ -18,6 +18,7 @@ public class UserResponseDTO {
 	private String createdBy;
 	private Date updatedOn;
 	private String updatedBy;
+	private byte[] imageData;
 	private List<String> userRole;
 
 }

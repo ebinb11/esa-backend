@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.employee.employeebackend.dto.StatusResponse;
 import com.employee.employeebackend.dto.UserListResponseDTO;
@@ -30,6 +31,7 @@ import com.employee.employeebackend.repository.RoleRepository;
 import com.employee.employeebackend.repository.UserRepository;
 import com.employee.employeebackend.repository.UserRoleRepository;
 import com.employee.employeebackend.service.UserService;
+import com.employee.employeebackend.utils.ImageUtils;
 import com.google.gson.Gson;
 
 import java.util.stream.Collectors;
@@ -158,8 +160,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	public UserResponseDTO userGetById(Long id) {
 		Optional<User> userGet = userRepository.findByIdAndDeletedFalsed(id);
 		if (!userGet.isPresent()) {
-//			throw new BadDataException("User not found !");
-			return null;
+			throw new BadDataException("User not found !");
 		}
 		UserResponseDTO response = response(userGet.get());
 		return response;
@@ -193,6 +194,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		responseSet.setCreatedOn(user.getCreatedOn());
 		responseSet.setUpdatedBy(user.getUpdatedBy());
 		responseSet.setUpdatedOn(user.getUpdatedOn());
+		responseSet.setImageData(user.getImageData());
 		responseSet.setUserRole(user.getRoles().stream().map(e -> (e.getName())).collect(Collectors.toList()));
 		return responseSet;
 
@@ -224,5 +226,42 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	@Override
+	public String uploadImage(MultipartFile file, Long id) {
+		try {
+			Optional<User> userGet = userRepository.findByIdAndDeletedFalsed(id);
+
+			if (!userGet.isPresent()) {
+				throw new BadDataException("User not found !");
+			}
+			byte[] ima = ImageUtils.compressImage(file.getBytes());
+			userGet.get().setImageData(ima);
+			User userSaveInDb = userRepository.save(userGet.get());
+			if (userSaveInDb != null) {
+				return "File uploaded successfully : " + file.getOriginalFilename();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public byte[] downloadImage(Long id) {
+		byte[] images = null;
+		try {
+			Optional<User> userGet = userRepository.findByIdAndDeletedFalsed(id);
+
+			if (!userGet.isPresent()) {
+				throw new BadDataException("User not found !");
+			}
+			images = ImageUtils.decompressImage(userGet.get().getImageData());
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return images;
 	}
 }

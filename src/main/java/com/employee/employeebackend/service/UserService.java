@@ -1,6 +1,7 @@
 package com.employee.employeebackend.service;
 
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.employee.employeebackend.dto.StatusResponse;
 import com.employee.employeebackend.dto.UserListResponseDTO;
@@ -21,5 +22,9 @@ public interface UserService {
 	StatusResponse deleteUser(Long id);
 
 	UserResponseDTO userUpdateById(Long id, UserRequestDTO request);
+	
+	public String uploadImage(MultipartFile file, Long id);
+	
+	public byte[] downloadImage(Long id);
 
 }

@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
@@ -57,6 +58,9 @@ public class User {
 	private String updatedBy;
 	@Column(name = "deleted_on")
 	private Date deletedOn;
+	@Lob
+	@Column(name = "image_data")
+	private byte[] imageData;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",

@@ -7,5 +7,5 @@ import com.employee.employeebackend.entity.UserRole;
 
 @Repository
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
-
+	
 }

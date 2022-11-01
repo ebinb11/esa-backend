@@ -1,5 +1,7 @@
 package com.employee.employeebackend.dto;
 
+import java.util.List;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -18,4 +20,5 @@ public class UserRequestDTO {
 	@Email(message = "Please provide valid email id")
 	private String email;
 	private String password;
+	private List<String> userRole;
 }

@@ -15,6 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -23,6 +26,8 @@ import lombok.ToString;
 @Data
 @Table(schema = "esaf", catalog = "esaf", name = "user")
 @ToString(exclude = "roles")
+@DynamicInsert
+@DynamicUpdate
 public class User {
 
 	@Id

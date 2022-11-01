@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,7 +46,7 @@ public class UserController {
 		return "Welcome to esaf!";
 	}
 
-	@GetMapping(value = "getUserList")
+	@GetMapping(value = "list")
 	public AppResponse<UserListResponseDTO> getUserList(
 			@RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
 			@RequestParam(value = "size", required = false, defaultValue = "10") Integer size,
@@ -67,7 +68,7 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping(value = "userEntry")
+	@PostMapping(value = "entry")
 	@PreAuthorize("hasAnyAuthority('ADMIN')")
 	public AppResponse<UserResponseDTO> userEntry(@RequestBody @Valid UserRequestDTO request) {
 		UserResponseDTO response = userService.userEntry(request);
@@ -85,7 +86,7 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping(value = "/userGet/{id}")
+	@GetMapping(value = "/fetch/{id}")
 	public AppResponse<UserResponseDTO> userGet(@PathVariable Long id) throws BadDataException {
 		Preconditions.checkNotNull(id);
 		UserResponseDTO response = userService.userGetById(id);
@@ -103,7 +104,25 @@ public class UserController {
 		}
  	}
 	
-	@DeleteMapping(value = "/user/{id}")
+	@PutMapping(value = "/update/{id}")
+	public AppResponse<UserResponseDTO> userUpdate(@PathVariable Long id, @RequestBody UserRequestDTO request) {
+		Preconditions.checkNotNull(id);
+		UserResponseDTO response = userService.userUpdateById(id,request);
+		if(response !=null) {
+			return AppResponse.<UserResponseDTO> builder()
+					.data(response)
+					.success(true)
+					.message("User Updated successfully")
+					.build();
+		} else {
+			return AppResponse.<UserResponseDTO> builder()
+					.success(false)
+					.message("Oops something went wrong, please try again later!")
+					.build();
+		}
+
+	}
+	@DeleteMapping(value = "/delete/{id}")
 	public AppResponse<StatusResponse> userDelete(@PathVariable Long id) throws BadDataException {
 		StatusResponse response = userService.deleteUser(id);
 		if (response != null) {

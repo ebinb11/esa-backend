@@ -27,4 +27,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	@Query("FROM User as u WHERE u.email = ?1 AND u.isDeleted = 'false' ")
 	User findByEmailIdAndDeletedfalses(String emailId);
+
+	Optional<User> findByIdAndIsDeletedFalse(Long id);
 }

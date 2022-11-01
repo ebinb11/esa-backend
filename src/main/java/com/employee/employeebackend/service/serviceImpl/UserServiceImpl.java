@@ -16,24 +16,36 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.employee.employeebackend.dto.StatusResponse;
 import com.employee.employeebackend.dto.UserListResponseDTO;
 import com.employee.employeebackend.dto.UserRequestDTO;
 import com.employee.employeebackend.dto.UserResponseDTO;
+import com.employee.employeebackend.entity.Role;
 import com.employee.employeebackend.entity.User;
+import com.employee.employeebackend.entity.UserRole;
 import com.employee.employeebackend.exception.BadDataException;
+import com.employee.employeebackend.repository.RoleRepository;
 import com.employee.employeebackend.repository.UserRepository;
+import com.employee.employeebackend.repository.UserRoleRepository;
 import com.employee.employeebackend.service.UserService;
 import com.google.gson.Gson;
 
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	RoleRepository roleRepository;
+
+	@Autowired
+	UserRoleRepository userRoleRepository;
 
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -122,6 +134,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 			if (userSaveInDB == null) {
 				throw new BadDataException("Something went wrong when tried to enter data");
 			}
+			// Role Setup
+			request.getUserRole().forEach(obj -> {
+				Role roleGet = roleRepository.findByName(obj).get();
+				if (roleGet.getId() == null) {
+					throw new BadDataException("Please choose valid role");
+				}
+				UserRole userRoleSet = new UserRole();
+				userRoleSet.setRole(roleGet);
+				userRoleSet.setUser(userSaveInDB);
+				userRoleRepository.save(userRoleSet);
+			});
+
 			UserResponseDTO response = response(userSaveInDB);
 			return response;
 		} catch (Exception e) {
@@ -163,12 +187,42 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		responseSet.setId(user.getId());
 		responseSet.setFirstName((user.getFirstName()));
 		responseSet.setLastName(user.getLastName());
+		responseSet.setEmail(user.getEmail());
+		responseSet.setPhoneNo(user.getPhoneNo());
 		responseSet.setCreatedBy(user.getCreatedBy());
 		responseSet.setCreatedOn(user.getCreatedOn());
 		responseSet.setUpdatedBy(user.getUpdatedBy());
 		responseSet.setUpdatedOn(user.getUpdatedOn());
-
+		responseSet.setUserRole(user.getRoles().stream().map(e -> (e.getName())).collect(Collectors.toList()));
 		return responseSet;
 
+	}
+
+	@Override
+	public UserResponseDTO userUpdateById(Long id, UserRequestDTO request) {
+		try {
+			User user = new User();
+			if (id != null && id > 0) {
+				Optional<User> userGet = userRepository.findByIdAndIsDeletedFalse(id);
+				if (!userGet.isPresent()) {
+					throw new BadDataException("Given id" + id + "is not found!");
+				}
+				user = userGet.get();
+				user.setEmail(request.getEmail());
+				user.setPhoneNo(request.getPhoneNo());
+				user.setFirstName(request.getFirstName());
+				user.setLastName(request.getLastName());
+				user.setUpdatedOn(new Date());
+				User userSaveInDB = userRepository.save(user);
+				if (userSaveInDB == null) {
+					throw new BadDataException("Something went wrong when tried to enter data");
+				}
+				UserResponseDTO response = response(userSaveInDB);
+				return response;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

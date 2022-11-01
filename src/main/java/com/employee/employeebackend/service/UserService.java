@@ -20,4 +20,6 @@ public interface UserService {
 
 	StatusResponse deleteUser(Long id);
 
+	UserResponseDTO userUpdateById(Long id, UserRequestDTO request);
+
 }

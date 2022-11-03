@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Static Template</title>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+    <style type="text/css">
+      .successmessage {
+        color: green;
+      }
+      .errormessage {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>JQ</h1>
+    <input id="title" />
+    <input name="fname" />
+    <input type="text" />
+    <input type="checkbox" />
+    <select id="selectId">
+      <option value="IN">INDIA</option>
+      <option value="PAK">PAKISTAN</option>
+      <option value="UK">LONDON</option>
+    </select>
+    <br />
+    <br />
+    <button id="btn">Click me</button>
+    <br />
+    <br />
+    <span id="spantext">Welcome</span>
+    <br />
+    <br />
+    <span id="spanhtml"></span>
+    <br />
+    <br />
+    <table id="tblEntAttributes">
+      <thead>
+        <tr>
+          <td>ID</td>
+          <td>Name</td>
+          <td>Status</td>
+        </tr>
+        <thead>
+        </tbody>
+      </thead>
+    </table>
+    <script>
+      debugger;
+      var arrayUser = [
+        { id: "1", name: "Ebin", status: "YES" },
+        { id: "2", name: "Ebeesh", status: "YES" },
+        { id: "3", name: "Shebin", status: "NO" }
+      ];
+      //For ajax call
+      var userList = [];
+      $(document).ready(function () {
+        $("#title").val("MR");
+        $("input[name=fname]").val("EBIN");
+        $("input[type=text]").val("B");
+        $("#selectId").val("UK");
+        $("#selectId").prop(`disabled`);
+        $("#spantext").addClass("successmessage");
+
+        $("#btn").click(function () {
+          // $("#spantext").text("Why You Touched Me!");
+          // $("#spanhtml").html("Why You Touched <b>Me!<b>");
+          // $("#selectId").prop(`disabled`, !$("#selectId").prop(`disabled`));
+          // $("input[type=checkbox]").prop(
+          //   `checked`,
+          //   !$("input[type=checkbox]").prop(`checked`)
+          // );
+          // $("#spantext").addClass("errormessage");
+
+          // $(this).text("Clicked");
+          // $(this).text("Click Me");
+          var _tr = "";
+          $.each(arrayUser, function (index, item) {
+             _tr += "<tr><td>"+item.id +"</td><td>"+item.name+"</td><td>"+item.status+"</td></tr>";
+          });
+          $("#tblEntAttributes tbody").html(_tr);
+        });
+        //Ajax call
+        $.ajax({
+          url:'localhost:8081/api/user/list',
+          type='GET',
+          success:function(response) {
+            console.log(response.data);
+          },
+          failure:function(response) {
+            console.log(response.data);
+          }
+
+        })
+
+      });
+    </script>
+  </body>
+</html>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Static Template</title>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"></script>
+  </head>
+  <body>
+    <div id="maindiv">
+      <h1>JQ</h1>
+      <br />
+      <br />
+      <button id="btn">Click Me</button>
+      <table id="tblAttr">
+        <thead>
+          <tr>
+            <td>ID</td>
+            <td>NAME</td>
+            <td>STATUS</td>
+            <td>SALARY</td>
+            <td>ACTION</td>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        var userList = [
+          { id: "1", name: "Ebin", status: "In Active" },
+          { id: "2", name: "Ebeesh", status: "In Active" },
+          { id: "3", name: "Shebin", status: "Active" }
+        ];
+
+        $("#btn").click(function () {
+          var _tr = "";
+          $.each(userList, function (index, item) {
+            _tr +=
+              "<tr><td>" +
+              item.id +
+              "</td><td>" +
+              item.name +
+              "</td><td>" +
+              item.status +
+              "</td><td><input id='textSalary' onChange='functionChange(this)'/></td><td><button onClick='functonRemove(this)'>Delete</a></td><td><input id='textRemarks'/></td</tr>";
+          });
+          $("#tblAttr tbody").html(_tr);
+        });
+      });
+      function functonRemove(element) {
+        var _currentRow = element.closest("tr");
+        var salaryCnt = $(_currentRow).find("input#textSalary");
+        var salary = $(salaryCnt).val();
+        var remarks = $(_currentRow).find("input#textRemarks");
+        console.log(salary);
+        if (salary != "") {
+          $(_currentRow).remove();
+        } else {
+          $(salaryCnt).css("border-color", "red");
+        }
+      }
+
+      function functionChange(element) {
+        debugger;
+        var salary = $(element).val();
+        if (salary != "") {
+          $(element).css("border-color", "green");
+        } else {
+          $(element).css("border-color", "red");
+        }
+        debugger;
+      }
+    </script>
+  </body>
+</html>
